@@ -25,6 +25,9 @@ class Radio:
         self.__currentStation -= 1
         self.play()
 
+    def pause(self):
+        self.__player.pause()
+
     def getInfo(self):
         return self.__currentStation
 
