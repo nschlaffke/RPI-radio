@@ -21,6 +21,9 @@ while True:
             print('Station down')
             rd.stationDown()
             print('Changed to ' + str(rd.getInfo()))
+        if keyboard.is_pressed('c'):
+            print('pause')
+            rd.pause()
         sleep(0.1)
     except:
         pass
