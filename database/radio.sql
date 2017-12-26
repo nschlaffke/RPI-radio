@@ -13,3 +13,6 @@ VALUES('http://host4.whooshserver.com:9162/live');
 
 INSERT INTO stations(url)
 VALUES('http://i30.letio.com/9166.aac');
+
+INSERT INTO stations(url)
+VALUES('http://wms.streampartner.nl:8000/grootnieuwsradio');
