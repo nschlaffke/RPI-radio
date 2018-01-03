@@ -10,7 +10,7 @@ def prepareThresholdedImage(img):
     value = (35, 35)
     blurred = cv2.GaussianBlur(grey, value, 0)
 
-    # thresholdin: Otsu's Binarization method
+    # thresholding: Otsu's Binarization method
     _, thresh = cv2.threshold(blurred, 127, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
 
     # show thresholded image
@@ -46,7 +46,7 @@ def drawContoursAndHull(img, thresh):
     return defects, cnt, drawing
 
 
-def countDefects(img, defects, cnt):
+def countFingers(img, defects, cnt):
     defectsCount = 0
 
     # applying Cosine Rule to find angle for all defects (between fingers)
@@ -77,7 +77,7 @@ def countDefects(img, defects, cnt):
         cv2.line(img, start, end, [0, 255, 0], 2)
         # cv2.circle(cropImg,far,5,[0,0,255],-1)
 
-    cv2.putText(img, str(defectsCount + 1), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+    return defectsCount + 1
 
 
 def determineNumberOfFingers():
@@ -94,7 +94,9 @@ def determineNumberOfFingers():
 
         thresh1 = prepareThresholdedImage(cropImg)
         defects, cnt, drawing = drawContoursAndHull(cropImg, thresh1)
-        countDefects(cropImg, defects, cnt)
+        fingersCount = countFingers(cropImg, defects, cnt)
+
+        cv2.putText(img, str(fingersCount), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
 
         # show appropriate images in windows
         cv2.imshow('Gesture', img)
