@@ -32,8 +32,8 @@ class Radio:
         self.__paused = True
 
     def getInfo(self):
-        return self.__currentStation
+        return self.__stationsList[self.__currentStation]
 
-    def isPaused(selfs):
+    def isPaused(self):
         return self.__paused
 

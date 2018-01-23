@@ -7,9 +7,6 @@ from radio import Radio
 from databaseController import DatabaseController
 from RaspberryAudioController import RaspberryAudioController
 
-stations = ['http://20133.live.streamtheworld.com/SRGSTR02AAC.aac',
-            'http://host4.whooshserver.com:9162/live', 'http://i30.letio.com/9166.aac']
-
 db = DatabaseController("remote", "3edcvfr4", "192.168.8.110", "radio")
 db.connect()
 stations = db.getStationsList()
@@ -32,7 +29,7 @@ while True:
         db.insertDescribedAction('station_up', rd.getInfo())
     if action == 4:
         rd.stationDown()
-        db.insertDescribedAction('station_down',rd.getInfo())
+        db.insertDescribedAction('station_down', rd.getInfo())
     if action == 5:
         if rd.isPaused():
             rd.play()
