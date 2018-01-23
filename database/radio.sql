@@ -5,6 +5,12 @@ CREATE TABLE stations
     station_id INTEGER PRIMARY KEY AUTOINCREMENT,
     url TEXT NOT NULL
 );
+
+CREATE TABLE actions
+(
+   action_id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+);
 INSERT INTO stations(url) 
 VALUES('http://20133.live.streamtheworld.com/SRGSTR02AAC.aac');
 
