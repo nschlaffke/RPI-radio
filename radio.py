@@ -7,11 +7,13 @@ class Radio:
         self.__stationsList = stationsList
         self.__numberOfStations = len(stationsList)
         self.__currentStation = self.__numberOfStations//2
+        self.__paused = True
 
     def play(self):
         self.__media = self.__instance.media_new(self.__stationsList[self.__currentStation])
         self.__player.set_media(self.__media)
         self.__player.play()
+        self.__paused = False
 
     def stationUp(self):
         if self.__currentStation == self.__numberOfStations - 1:
@@ -27,7 +29,11 @@ class Radio:
 
     def pause(self):
         self.__player.pause()
+        self.__paused = True
 
     def getInfo(self):
         return self.__currentStation
+
+    def isPaused(selfs):
+        return self.__paused
 
