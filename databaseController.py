@@ -7,6 +7,7 @@ class DatabaseController:
     INSERT_ACTION = 'INSERT INTO actions(action) VALUES(%s)'
     INSERT_DESCRIBED_ACTION = 'INSERT INTO actions(action, description) VALUES(%s, %s)'
     ACTIONS = ('volume_up', 'volume_down', 'station_up', 'station_down', 'play', 'pause')
+    GET_GESTURES = 'SELECT * FROM gestures'
 
     def __init__(self, user, password, host, database):
         self._user = user
@@ -42,6 +43,12 @@ class DatabaseController:
         cursor.execute(DatabaseController.INSERT_DESCRIBED_ACTION, (action, description,))
         self._cnx.commit()
 
+    def getGesturesDict(self):
+        cursor = self._cnx.cursor()
+        cursor.execute(DatabaseController.GET_GESTURES)
+        result = cursor.fetchall()
+        mapping = {x[1]:x[0] for x in result}
+        return mapping
 
 
 
