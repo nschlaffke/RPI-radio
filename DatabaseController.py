@@ -2,6 +2,7 @@ import sqlite3
 
 
 class DatabaseController:
+    STATEMENT = 'SELECT url FROM stations ORDER BY station_id ASC'
     def __init__(self, path):
         self.__path = path
 
@@ -13,8 +14,7 @@ class DatabaseController:
 
     def getStationsList(self):
         cursor = self.__db.cursor()
-        statement = 'SELECT url FROM stations ORDER BY station_id ASC'
-        cursor.execute(statement)
+        cursor.execute(DatabaseController.STATEMENT)
         result = cursor.fetchall()
         stations = [x[0] for x in result]
         return stations

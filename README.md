@@ -1,1 +1,2 @@
 # RPI-radio
+dependencies: vlc
