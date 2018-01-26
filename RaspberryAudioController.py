@@ -2,13 +2,14 @@ from AudioController import AudioController
 import alsaaudio
 
 class RaspberryAudioController(AudioController):
+    CHANNEL_NUMBER = 0
     def __init__(self, step):
         super().__init__(step)
         self.__mixer = alsaaudio.Mixer("PCM")
 
     def getVolume(self):
         volume = self.__mixer.getvolume()
-        return volume[0]
+        return volume[self.CHANNEL_NUMBER]
 
     def volumeUp(self):
         step = self.getStep()
