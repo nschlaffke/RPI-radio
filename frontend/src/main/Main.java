@@ -1,39 +1,62 @@
 package main;
 
-import connection.ConnectionManager;
+import databaseCommunication.ConnectionManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import logic.ExceptionHandler;
+import logic.MainController;
 
+import java.io.IOException;
 import java.sql.Connection;
 
 public class Main extends Application {
     ConnectionManager manager;
-    Connection con;
 
     @Override
     public void init() throws Exception{
         manager = new ConnectionManager();
 
         manager.setUpDriver("com.mysql.jdbc.Driver");
-        con = manager.setUpConnection("jdbc:mysql://192.168.9.9/radio?useSSL=false", "remote", "3edcvfr4");
+        manager.setUpConnection("jdbc:mysql://192.168.9.9/radio?useSSL=false", "remote", "3edcvfr4");
     }
 
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("../ui/mainView.fxml"));
-        primaryStage.setTitle("Radio Controller");
-        primaryStage.setScene(new Scene(root, 1024, 720));
-        primaryStage.show();
+
+        Parent root;
+        FXMLLoader loader;
+
+        try {
+            loader = new FXMLLoader(getClass().getResource("../ui/mainView.fxml"));
+
+            root = loader.load();
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setTitle("Radio Controller");
+            stage.setScene(new Scene(root, 1024, 720));
+
+            stage.show();
+
+            MainController controller = loader.<MainController>getController();
+            controller.init(manager);
+        }
+        catch (IOException e) {
+            ExceptionHandler.generalExceptionHandler(e, "Problem with creating the Main View Scene has occured");
+        }
+
+
+
     }
 
 
     @Override
     public void stop() throws Exception{
-        manager.closeConnection(con);
+        manager.closeConnection();
     }
 
     public static void main(String[] args) {
