@@ -15,16 +15,16 @@ rd = Radio(stations)
 audioController = RaspberryAudioController(30)
 paused = True
 mapping = db.getGesturesDict()
-
+db.insertDescribedAction('volume_up', str(audioController.getVolume()))
 while True:
     print("1. volume up\n2. volume down\n3. station up\n4. station down\n5. play\pause\n")
     action = int(input())
     if action == mapping['volume_up']:
         audioController.volumeUp()
-        db.insertAction('volume_up')
+        db.insertDescribedAction('volume_up', str(audioController.getVolume()))
     if action == mapping['volume_down']:
         audioController.volumeDown()
-        db.insertAction('volume_down')
+        db.insertDescribedAction('volume_down', str(audioController.getVolume()))
     if action == mapping['station_up']:
         rd.stationUp()
         db.insertDescribedAction('station_up', rd.getInfo())

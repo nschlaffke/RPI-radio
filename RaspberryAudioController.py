@@ -7,8 +7,8 @@ class RaspberryAudioController(AudioController):
         self.__mixer = alsaaudio.Mixer("PCM")
 
     def getVolume(self):
-        [volume] = self.__mixer.getvolume()
-        return volume
+        volume = self.__mixer.getvolume()
+        return volume[0]
 
     def volumeUp(self):
         step = self.getStep()
