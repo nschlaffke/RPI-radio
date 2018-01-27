@@ -5,7 +5,7 @@ class RaspberryAudioController(AudioController):
     CHANNEL_NUMBER = 0
     def __init__(self, step):
         super().__init__(step)
-        self.__mixer = alsaaudio.Mixer("PCM")
+        self.__mixer = alsaaudio.Mixer()
 
     def getVolume(self):
         volume = self.__mixer.getvolume()

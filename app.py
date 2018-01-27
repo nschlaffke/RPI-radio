@@ -7,7 +7,7 @@ from radio import Radio
 from databaseController import DatabaseController
 from RaspberryAudioController import RaspberryAudioController
 
-db = DatabaseController("remote", "3edcvfr4", "192.168.8.110", "radio")
+db = DatabaseController("remote", "3edcvfr4", "192.168.9.9", "radio")
 db.connect()
 stations = db.getStationsList()
 
@@ -16,6 +16,7 @@ audioController = RaspberryAudioController(30)
 paused = True
 mapping = db.getGesturesDict()
 db.insertDescribedAction('volume_up', str(audioController.getVolume()))
+print(str(audioController.getVolume()))
 while True:
     print("1. volume up\n2. volume down\n3. station up\n4. station down\n5. play\pause\n")
     action = int(input())

@@ -23,7 +23,7 @@
       </Label>
       <HBox prefHeight="468.0" prefWidth="1024.0" VBox.vgrow="ALWAYS">
          <children>
-            <VBox prefHeight="511.0" prefWidth="456.0" HBox.hgrow="ALWAYS">
+            <VBox prefHeight="634.0" prefWidth="487.0" HBox.hgrow="ALWAYS">
                <children>
                   <HBox alignment="CENTER">
                      <children>
@@ -42,24 +42,15 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </TextArea>
-                  <HBox alignment="BOTTOM_CENTER" prefHeight="27.0" prefWidth="504.0">
+                  <HBox alignment="BOTTOM_CENTER" prefHeight="59.0" prefWidth="455.0">
                      <children>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <TextField fx:id="stationName" prefHeight="25.0" prefWidth="307.0" promptText="Station Name">
-                                 <VBox.margin>
-                                    <Insets bottom="7.0" left="10.0" right="10.0" top="10.0" />
-                                 </VBox.margin>
-                              </TextField>
-                              <TextField fx:id="url" prefHeight="25.0" prefWidth="307.0" promptText="URL">
-                                 <VBox.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="7.0" />
-                                 </VBox.margin>
-                              </TextField>
-                           </children>
-                        </VBox>
+                        <TextField fx:id="url" prefHeight="30.0" prefWidth="223.0" promptText="URL">
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </TextField>
                         <Region prefHeight="90.0" prefWidth="28.0" />
-                        <Button fx:id="addStation" mnemonicParsing="false" onAction="#handleAddStation" prefHeight="29.0" prefWidth="162.0" text="Add new station">
+                        <Button fx:id="addStation" mnemonicParsing="false" onAction="#handleAddStation" prefHeight="29.0" prefWidth="187.0" text="Add new station">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>
@@ -77,18 +68,11 @@
                   </HBox>
                   <HBox prefHeight="11.0" prefWidth="514.0">
                      <children>
-                        <MenuButton fx:id="stationDeletionMenu" mnemonicParsing="false" prefHeight="25.0" prefWidth="231.0" text="MenuButton" HBox.hgrow="ALWAYS">
-                          <items>
-                            <MenuItem mnemonicParsing="false" text="Action 1" />
-                            <MenuItem mnemonicParsing="false" text="Action 2" />
-                          </items>
+                        <ChoiceBox fx:id="stationDeletionMenu" prefHeight="25.0" prefWidth="214.0">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </MenuButton>
+                        </ChoiceBox>
                         <Region prefHeight="49.0" prefWidth="34.0" />
                         <Button fx:id="deleteStation" mnemonicParsing="false" onAction="#handleDeleteStation" prefHeight="29.0" prefWidth="170.0" text="Delete station" HBox.hgrow="ALWAYS">
                            <font>
@@ -131,7 +115,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="29.0" prefWidth="498.0">
                      <children>
-                        <Label text="Current Station:" textFill="#0f9fff">
+                        <Label prefHeight="26.0" prefWidth="214.0" text="Current Station:" textFill="#0f9fff" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="22.0" />
                            </font>
@@ -142,10 +126,9 @@
                               <Insets top="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Region prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="currentStation" text="Label" textFill="#808080">
+                        <Label fx:id="currentStation" alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="241.0" text="Label" textFill="#808080">
                            <font>
-                              <Font name="System Bold" size="20.0" />
+                              <Font name="System Bold" size="13.0" />
                            </font>
                            <HBox.margin>
                               <Insets />
@@ -158,7 +141,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0">
                      <children>
-                        <Label text="Volume:" textFill="#0f9fff" HBox.hgrow="ALWAYS">
+                        <Label prefHeight="26.0" prefWidth="118.0" text="Volume:" textFill="#0f9fff" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="System Bold" size="22.0" />
                            </font>
@@ -169,7 +152,7 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </HBox.margin>
                         </Label>
-                        <Region prefHeight="46.0" prefWidth="137.0" HBox.hgrow="ALWAYS" />
+                        <Region prefHeight="46.0" prefWidth="136.0" />
                         <ProgressBar fx:id="volumeBar" prefHeight="20.0" prefWidth="217.0" progress="0.0" HBox.hgrow="ALWAYS">
                            <HBox.margin>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -225,7 +208,7 @@
                   </TextArea>
                </children>
                <HBox.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                  <Insets bottom="10.0" left="10.0" right="12.0" top="10.0" />
                </HBox.margin>
             </VBox>
          </children>

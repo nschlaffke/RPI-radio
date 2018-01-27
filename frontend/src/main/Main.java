@@ -37,7 +37,7 @@ public class Main extends Application {
 
             root = loader.load();
             Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setTitle("Radio Controller");
+            stage.setTitle("Radio Controller - Main");
             stage.setScene(new Scene(root, 1024, 720));
 
             stage.show();

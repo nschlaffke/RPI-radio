@@ -3,7 +3,6 @@ package logic;
 import databaseCommunication.BasicCommand;
 import databaseCommunication.ConnectionManager;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,9 +16,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainController implements Controller {
 
@@ -35,7 +38,7 @@ public class MainController implements Controller {
     private TextArea availableStations;
 
     @FXML
-    private MenuButton stationDeletionMenu;
+    private ChoiceBox stationDeletionMenu;
 
     @FXML
     private TextField stationName;
@@ -67,19 +70,21 @@ public class MainController implements Controller {
         this.connectionManager = connectionManager;
     }
 
-    private void initAvailableStations(){
+    private void initAvailableDeletionStations(){
         int stationId = 0;
-        String stationName = null;
+        String stationName;
         StringBuilder stationNamesList = new StringBuilder();
-        Statement statement = connectionManager.createStatement();
+        BasicCommand basicCommand = new BasicCommand(connectionManager);
         ResultSet resultSet = null;
+        stationDeletionMenu.getItems().clear();
 
-        try { resultSet = statement.executeQuery(BasicCommand.ALL_STATIONS); } catch (SQLException e) { ExceptionHandler.generalExceptionHandler(e, "The execution of the ALL_STATIONS query has failed"); }
+        try { resultSet = basicCommand.getAllStationsStatement().executeQuery(); } catch (SQLException e) { ExceptionHandler.generalExceptionHandler(e, "The execution of the ALL_STATIONS query has failed"); }
 
         try {
             while (resultSet.next()) {
                 stationName = resultSet.getString("url");
-                stationNamesList.append(++stationId).append(". ").append(stationName).append("\n");
+                stationDeletionMenu.getItems().add(stationId++, stationName);
+                stationNamesList.append(stationId).append(". ").append(stationName).append("\n");
             }
         } catch(SQLException e){
             ExceptionHandler.generalExceptionHandler(e, "Station names list loading has failed");
@@ -88,40 +93,119 @@ public class MainController implements Controller {
         availableStations.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         availableStations.setText(stationNamesList.toString());
 
-        connectionManager.closeStatement();
+        try { resultSet.close(); } catch (SQLException e) { ExceptionHandler.generalExceptionHandler(e, "Closing the resultSet has failed"); }
+    }
+
+    private String extractStationName(String fullURL){
+        URL url = null;
+
+        try {
+            url = new URL(fullURL);
+            return url.getHost();
+        } catch (MalformedURLException | NullPointerException e) {
+            ExceptionHandler.generalExceptionHandler(e, "The url has a wrong form");
+        }
+        return null;
+    }
+
+    private void initHistory(){ //puscic w osobnym watku sprawdzanie licznby rekordów
+        String stationName;
+        StringBuilder stationNamesHistory = new StringBuilder();
+        BasicCommand basicCommand = new BasicCommand(connectionManager);
+        ResultSet resultSet = null;
+
+        try {
+            resultSet = basicCommand.getActionsHistoryStatement().executeQuery();
+            if(resultSet.next()){
+                currentStation.setText(extractStationName(resultSet.getString("description")));
+            }
+
+            while (resultSet.next()) {
+                stationName = resultSet.getString("description");
+                stationNamesHistory.append(stationName).append("\n");
+            }
+
+        } catch (SQLException e) {
+            ExceptionHandler.generalExceptionHandler(e, "The execution of the actionsHistory query has failed");
+        }
+
+        history.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        history.setText(stationNamesHistory.toString());
+
         try { resultSet.close(); } catch (SQLException e) { ExceptionHandler.generalExceptionHandler(e, "Closing the resultSet has failed"); }
     }
 
     private void initVolumeLevel() {
+        BasicCommand basicCommand = new BasicCommand(connectionManager);
+        ResultSet resultSet = null;
 
+        try {
+            resultSet = basicCommand.getCurrentVolume().executeQuery();
+            if(resultSet.next()){
+                volumeBar.setProgress(Integer.parseInt(resultSet.getString("description")) / 100.0);
+            }
+        } catch (SQLException e) {
+            ExceptionHandler.generalExceptionHandler(e, "The execution of the currentVolume query has failed");
+        }
+
+        try { resultSet.close(); } catch (SQLException e) { ExceptionHandler.generalExceptionHandler(e, "Closing the resultSet has failed"); }
     }
 
     private void initInstructions() {
-
+        instructions.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+        instructions.setText("The number\t\tAction:\n" +
+                "of fingers:\n\n" +
+                "\t1\t\t\tTurn Volume Up\n" +
+                "\t2\t\t\tTurn Volume Down\n" +
+                "\t3\t\t\tTurn the next station on\n" +
+                "\t4\t\t\tTurn the previous station on\n" +
+                "\t5\t\t\tPlay / Pause");
     }
 
     @Override
     public void init(ConnectionManager connectionManager) {
+
         initConnectionManager(connectionManager);
-        initAvailableStations();
+        initAvailableDeletionStations();
         initVolumeLevel();
         initInstructions();
+        initHistory();
     }
 
     @FXML
     void handleAddStation(ActionEvent event) {
         String newUrl = url.getText();
-        Statement statement = connectionManager.createStatement();
+        PreparedStatement preparedStatement;
+        BasicCommand basicCommand = new BasicCommand(connectionManager);
 
-        connectionManager.closeStatement();
+        try {
+            preparedStatement = basicCommand.getAddStationStatement();
+            preparedStatement.setString(1, newUrl);
+            preparedStatement.addBatch();
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            ExceptionHandler.generalExceptionHandler(e, "The execution of the addStation query has failed");
+        }
+
+        url.clear();
+        initAvailableDeletionStations();
     }
 
     @FXML
     void handleDeleteStation(ActionEvent event) {
-        String detetedUrl = null;
-        Statement statement = connectionManager.createStatement();
+        String delUrl = (String) stationDeletionMenu.getValue();
+        PreparedStatement preparedStatement = null;
+        BasicCommand basicCommand = new BasicCommand(connectionManager);
 
-        connectionManager.closeStatement();
+        try {
+            preparedStatement = basicCommand.getDeleteStationStatement();
+            preparedStatement.setString(1, delUrl);
+            preparedStatement.addBatch();
+            preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            ExceptionHandler.generalExceptionHandler(e, "The execution of the deleteStations query has failed");
+        }
+        initAvailableDeletionStations();
     }
 
     @FXML
@@ -134,10 +218,13 @@ public class MainController implements Controller {
 
             root = loader.load();
             Stage stage = new Stage(StageStyle.DECORATED);
-            stage.setTitle("Statistics");
+            stage.setTitle("Radio Controller - Statistics");
             stage.setScene(new Scene(root, 1024, 720));
 
             stage.show();
+
+            StatisticsController controller = loader.<StatisticsController>getController();
+            controller.init(connectionManager);
 
             ((Node) (event.getSource())).getScene().getWindow().hide();
         } catch (IOException e) {
