@@ -109,6 +109,3 @@ def determineNumberOfFingers():
             #break
 
     return fingersCount
-
-while True:
-    print(determineNumberOfFingers())

@@ -21,6 +21,7 @@ class DatabaseController:
                                                 host=self._host, database=self._database)
         except mysql.connector.Error as err:
             print('An error occured: ', err)
+            exit()
 
     def getStationsList(self):
         cursor = self._cnx.cursor()

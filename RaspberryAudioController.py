@@ -1,11 +1,13 @@
-from AudioController import AudioController
 import alsaaudio
 
-class RaspberryAudioController(AudioController):
+class RaspberryAudioController():
     CHANNEL_NUMBER = 0
     def __init__(self, step):
-        super().__init__(step)
-        self.__mixer = alsaaudio.Mixer()
+        self.__step = step
+        self.__mixer = alsaaudio.Mixer('PCM')
+
+    def getStep(self):
+         return self.__step
 
     def getVolume(self):
         volume = self.__mixer.getvolume()
@@ -15,7 +17,7 @@ class RaspberryAudioController(AudioController):
         step = self.getStep()
         volume = self.getVolume()
         if volume + step >= 100:
-           self.__mixer.setvolume(100) 
+           self.__mixer.setvolume(100)
         else:
             self.__mixer.setvolume(volume + step)
 
@@ -23,6 +25,6 @@ class RaspberryAudioController(AudioController):
         step = self.getStep()
         volume = self.getVolume()
         if volume - step <= 0:
-            self.__mixer.setvolume(0) 
+            self.__mixer.setvolume(0)
         else:
             self.__mixer.setvolume(volume - step)

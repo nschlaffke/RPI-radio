@@ -1,13 +1,15 @@
-'''
-Dependencies: vlc, keyboard
-keyboard needs root privileges to run properly
-'''
+#! /usr/bin/env python2
 
 from radio import Radio
 from databaseController import DatabaseController
 from RaspberryAudioController import RaspberryAudioController
 
-db = DatabaseController("remote", "3edcvfr4", "192.168.9.9", "radio")
+login = 'remote'
+password = '3edcvf4'
+ip = '127.0.0.1'
+database = 'radio'
+
+db = DatabaseController(login, password, ip, database)
 db.connect()
 stations = db.getStationsList()
 
@@ -16,7 +18,7 @@ audioController = RaspberryAudioController(30)
 paused = True
 mapping = db.getGesturesDict()
 db.insertDescribedAction('volume_up', str(audioController.getVolume()))
-print(str(audioController.getVolume()))
+
 while True:
     print("1. volume up\n2. volume down\n3. station up\n4. station down\n5. play\pause\n")
     action = int(input())
