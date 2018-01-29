@@ -20,7 +20,7 @@ def prepareThresholdedImage(img):
 
 def drawContoursAndHull(img, thresh):
 
-    image, contours, hierarchy = cv2.findContours(img.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    image, contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
     # find contour with max area
     cnt = max(contours, key=lambda x: cv2.contourArea(x))
 
@@ -77,32 +77,38 @@ def countFingers(img, defects, cnt):
         cv2.line(img, start, end, [0, 255, 0], 2)
         # cv2.circle(cropImg,far,5,[0,0,255],-1)
 
-    return defectsCount + 1
-
+    return defectsCount
 
 def determineNumberOfFingers():
 
     cap = cv2.VideoCapture(0)
-    while(cap.isOpened()):
+    fingersCount = 0
+    #while(cap.isOpened()):
+    if(cap.isOpened()):
 
         # read image
         ret, img = cap.read()
 
         # get hand data from the rectangle sub window on the screen
-        cv2.rectangle(img, (300, 300), (100, 100), (0, 255, 0), 0)
-        cropImg = img[100:300, 100:300]
+        #cv2.rectangle(img, (300, 300), (100, 100), (0, 255, 0), 0)
+        #cropImg = img[100:300, 100:300]
 
-        thresh1 = prepareThresholdedImage(cropImg)
-        defects, cnt, drawing = drawContoursAndHull(cropImg, thresh1)
-        fingersCount = countFingers(cropImg, defects, cnt)
+        thresh1 = prepareThresholdedImage(img)
+        defects, cnt, drawing = drawContoursAndHull(img, thresh1)
+        fingersCount = countFingers(img, defects, cnt)
 
-        cv2.putText(img, str(fingersCount), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        #cv2.putText(img, str(fingersCount), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
 
         # show appropriate images in windows
-        cv2.imshow('Gesture', img)
-        all_img = np.hstack((drawing, cropImg))
-        cv2.imshow('Contours', all_img)
+        #cv2.imshow('Gesture', img)
+        #all_img = np.hstack((drawing, cropImg))
+        #cv2.imshow('Contours', all_img)
 
-        k = cv2.waitKey(10)
-        if k == 27:
-            break
+        #k = cv2.waitKey(10)
+        #if k == 27:
+            #break
+
+    return fingersCount
+
+while True:
+    print(determineNumberOfFingers())
